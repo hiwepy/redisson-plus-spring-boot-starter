@@ -44,7 +44,7 @@ public class RedissonOperationTemplate {
 		return redissonClient.getAtomicLong(lockKey);
 	}
 
-	/**
+	/*
 	 * 扣取现金账本
 	 * @param actid 账户id
 	 * @return
@@ -84,10 +84,10 @@ public class RedissonOperationTemplate {
 	}
 
 	/**
-	 * 家族lua脚本，返回sha值
+	 * 加载lua脚本，返回sha值
 	 *
 	 * @param luaScript 脚本内容
-	 * @return
+	 * @return 加载后的lua脚本
 	 */
 	public String loadLuaScript(String luaScript) {
 		return redissonClient.getScript().scriptLoad(luaScript);
@@ -97,10 +97,10 @@ public class RedissonOperationTemplate {
 	 * 执行lua脚本
 	 *
 	 * @param luaScript  脚本内容
-	 * @param resultType 返回值类型
+	 * @param returnType 返回值类型
 	 * @param keys       redis键列表
 	 * @param values     值列表
-	 * @return
+	 * @return lua脚步执行后返回的对象
 	 */
 	public <R> R executeLuaScript(String luaScript, ReturnType returnType, List<Object> keys, Object... values) {
 		RScript script = redissonClient.getScript();
@@ -112,10 +112,10 @@ public class RedissonOperationTemplate {
 	 *
 	 * @param mode  	   执行模式
 	 * @param luaScript  脚本内容
-	 * @param resultType 返回值类型
+	 * @param returnType 返回值类型
 	 * @param keys       redis键列表
 	 * @param values     值列表
-	 * @return
+	 * @return lua脚步执行后返回的对象
 	 */
 	public <R> R executeLuaScript(Mode mode, String luaScript, ReturnType returnType, List<Object> keys, Object... values) {
 		RScript script = redissonClient.getScript();
@@ -126,8 +126,8 @@ public class RedissonOperationTemplate {
 	 * 执行lua脚本
 	 *
 	 * @param luaScript  脚本内容
-	 * @param resultType 返回值类型
-	 * @return
+	 * @param returnType 返回值类型
+	 * @return lua脚步执行后返回的对象
 	 */
 	public <R> R executeLuaScript(String luaScript, ReturnType returnType) {
 		RScript script = redissonClient.getScript();
@@ -139,8 +139,8 @@ public class RedissonOperationTemplate {
 	 *
 	 * @param mode  	   执行模式
 	 * @param luaScript  脚本内容
-	 * @param resultType 返回值类型
-	 * @return
+	 * @param returnType 返回值类型
+	 * @return lua脚步执行后返回的对象
 	 */
 	public <R> R executeLuaScript(Mode mode, String luaScript, ReturnType returnType) {
 		RScript script = redissonClient.getScript();
