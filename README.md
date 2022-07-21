@@ -15,7 +15,7 @@ Extension of Redisson Spring Boot Starter
 <dependency>
 	<groupId>com.github.hiwepy</groupId>
 	<artifactId>redisson-plus-spring-boot-starter</artifactId>
-	<version>${project.version}</version>
+	<version>2.0.0.RELEASE</version>
 </dependency>
 ```
 
