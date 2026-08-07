@@ -449,10 +449,10 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <!-- Source: https://github.com/easy-4-java/spring-biz — easy4j spring-biz -->
+            <!-- Source: https://github.com/easy-4-java/spring-enhance — easy4j spring-biz -->
             <dependency>
                 <groupId>io.github.easy4j</groupId>
-                <artifactId>spring-biz</artifactId>
+                <artifactId>spring-enhance</artifactId>
                 <version>${spring-biz.version}</version>
             </dependency>
             
@@ -540,10 +540,10 @@
         </dependency>
 
         
-        <!-- Source: https://github.com/easy-4-java/spring-biz — easy4j spring-biz -->
+        <!-- Source: https://github.com/easy-4-java/spring-enhance — easy4j spring-biz -->
         <dependency>
             <groupId>io.github.easy4j</groupId>
-            <artifactId>spring-biz</artifactId>
+            <artifactId>spring-enhance</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.redisson/redisson-spring-boot-starter -->
         <dependency>
