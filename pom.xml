@@ -13,7 +13,7 @@
     <groupId>io.github.easy4j</groupId>
     <artifactId>redisson-plus-spring-boot-starter</artifactId>
     <description>Spring Boot Starter For Redisson Extension</description>
-    <version>2.7.x.20260527-SNAPSHOT</version>
+    <version>2.7.x.20260630-SNAPSHOT</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <url>https://github.com/easy-4-java/${project.artifactId}</url>
     <packaging>jar</packaging>
@@ -404,6 +404,7 @@
     </profiles>
 
     <properties>
+        <java.version>1.8</java.version>
 
         <!-- Dependency versions -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -416,7 +417,7 @@
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
         <redisson.version>3.17.4</redisson.version>
-        <spring-biz.version>1.1.4.RELEASE</spring-biz.version>
+        <spring-biz.version>1.0.x.20260630-SNAPSHOT</spring-biz.version>
         <mybatis.version>3.5.7</mybatis.version>
                 <commons-io.version>2.22.0</commons-io.version>
                 <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
