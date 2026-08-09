@@ -32,109 +32,118 @@ public final class RedissonManager {
             synchronized (RedissonManager.class) {
                 // 第二个判空（如果是空，就实例化对象）
                 if (instance == null) {
-
-                    Config config = null;
-                    Duration timeoutValue = redisProperties.getTimeout();
-                    int timeout;
-                    if(null == timeoutValue){
-                        timeout = 0;
-                    } else  {
-                        timeout = Long.valueOf(timeoutValue.toMillis()).intValue();
-                    }
-
-                    config = new Config();
-                    //  不能反序列化 阻塞队列中的string元素
-                    Codec codec = new JsonJacksonCodec();
-                    config.setCodec(codec);
-                    config.setEventLoopGroup(new NioEventLoopGroup());
-                    if (isLinuxPlatform() && Epoll.isAvailable()) {
-                        config.setEventLoopGroup(new EpollEventLoopGroup());
-                        config.setTransportMode(TransportMode.EPOLL);
-                    }
-
-                    if (redisProperties.getSentinel() != null) {
-                        String[]  nodes = convert(redisProperties.getSentinel().getNodes());
-                        config.useSentinelServers()
-                                .setMasterName(redisProperties.getSentinel().getMaster())
-                                .addSentinelAddress(nodes)
-                                .setDatabase(redisProperties.getDatabase())
-                                .setConnectTimeout(timeout)
-                                .setPassword(redisProperties.getPassword())
-                                // 性能配置
-                                .setConnectTimeout(timeout)
-                                .setDnsMonitoringInterval(redisProperties.getRedisson().getDnsMonitoringInterval())
-                                .setIdleConnectionTimeout(redisProperties.getRedisson().getIdleConnectionTimeout())
-                                .setKeepAlive(redisProperties.getRedisson().isKeepAlive())
-                                .setPingConnectionInterval(redisProperties.getRedisson().getPingConnectionInterval())
-                                //.setPingTimeout(redisProperties.getRedisson().getPingTimeout())
-                                .setRetryAttempts(redisProperties.getRedisson().getRetryAttempts())
-                                .setRetryInterval(redisProperties.getRedisson().getRetryInterval())
-                                .setSubscriptionConnectionMinimumIdleSize(redisProperties.getRedisson().getSubscriptionConnectionMinimumIdleSize())
-                                .setSubscriptionConnectionPoolSize(redisProperties.getRedisson().getSubscriptionConnectionPoolSize())
-                                .setSubscriptionsPerConnection(redisProperties.getRedisson().getSubscriptionsPerConnection())
-                                .setTimeout(redisProperties.getRedisson().getResponseTimeout())
-                                .setTcpNoDelay(redisProperties.getRedisson().isTcpNoDelay());
-                    } else if (redisProperties.getCluster() != null) {
-
-                        List<String> nodesObject = redisProperties.getCluster().getNodes();
-                        String[] nodes = convert(nodesObject);
-                        config = new Config();
-                        config.setCodec(codec);
-                        config.useClusterServers()
-                                .addNodeAddress(nodes)
-                                .setConnectTimeout(timeout)
-                                .setPassword(redisProperties.getPassword())
-                                // 性能配置
-                                .setConnectTimeout(timeout)
-                                .setDnsMonitoringInterval(redisProperties.getRedisson().getDnsMonitoringInterval())
-                                .setIdleConnectionTimeout(redisProperties.getRedisson().getIdleConnectionTimeout())
-                                .setKeepAlive(redisProperties.getRedisson().isKeepAlive())
-                                .setPingConnectionInterval(redisProperties.getRedisson().getPingConnectionInterval())
-                                //.setPingTimeout(redisProperties.getRedisson().getPingTimeout())
-                                .setRetryAttempts(redisProperties.getRedisson().getRetryAttempts())
-                                .setRetryInterval(redisProperties.getRedisson().getRetryInterval())
-                                .setSubscriptionConnectionMinimumIdleSize(redisProperties.getRedisson().getSubscriptionConnectionMinimumIdleSize())
-                                .setSubscriptionConnectionPoolSize(redisProperties.getRedisson().getSubscriptionConnectionPoolSize())
-                                .setSubscriptionsPerConnection(redisProperties.getRedisson().getSubscriptionsPerConnection())
-                                .setTimeout(redisProperties.getRedisson().getResponseTimeout())
-                                .setTcpNoDelay(redisProperties.getRedisson().isTcpNoDelay());
-                    } else {
-
-                        String prefix = REDIS_PROTOCOL_PREFIX;
-                        if (redisProperties.isSsl()) {
-                            prefix = REDISS_PROTOCOL_PREFIX;
-                        }
-
-                        config.useSingleServer()
-                                .setAddress(prefix + redisProperties.getHost() + ":" + redisProperties.getPort())
-                                .setDatabase(redisProperties.getDatabase())
-                                .setPassword(redisProperties.getPassword())
-                                //.setClientName(redisProperties.getClientName())
-                                // 性能配置
-                                .setConnectTimeout(timeout)
-                                .setConnectionMinimumIdleSize(redisProperties.getRedisson().getPool().getMinIdle())
-                                .setConnectionPoolSize(redisProperties.getRedisson().getPool().getMaxActive())
-                                .setDnsMonitoringInterval(redisProperties.getRedisson().getDnsMonitoringInterval())
-                                .setIdleConnectionTimeout(redisProperties.getRedisson().getIdleConnectionTimeout())
-                                .setKeepAlive(redisProperties.getRedisson().isKeepAlive())
-                                .setPingConnectionInterval(redisProperties.getRedisson().getPingConnectionInterval())
-                                //.setPingTimeout(redisProperties.getRedisson().getPingTimeout())
-                                .setRetryAttempts(redisProperties.getRedisson().getRetryAttempts())
-                                .setRetryInterval(redisProperties.getRedisson().getRetryInterval())
-                                .setSubscriptionConnectionMinimumIdleSize(redisProperties.getRedisson().getSubscriptionConnectionMinimumIdleSize())
-                                .setSubscriptionConnectionPoolSize(redisProperties.getRedisson().getSubscriptionConnectionPoolSize())
-                                .setSubscriptionsPerConnection(redisProperties.getRedisson().getSubscriptionsPerConnection())
-                                .setTimeout(redisProperties.getRedisson().getResponseTimeout())
-                                .setTcpNoDelay(redisProperties.getRedisson().isTcpNoDelay());
-
-                    }
-
+                    Config config = buildConfig(redisProperties);
                     instance = Redisson.create(config);
-
                 }
             }
         }
         return instance;
+    }
+
+    /**
+     * Builds a Redisson {@link Config} from the given Redis properties.
+     * Supports single-server, sentinel and cluster modes.
+     *
+     * @param redisProperties the Redis connection properties
+     * @return the Redisson configuration
+     */
+    static Config buildConfig(MyRedisProperties redisProperties) {
+        Duration timeoutValue = redisProperties.getTimeout();
+        int timeout;
+        if (null == timeoutValue) {
+            timeout = 0;
+        } else {
+            timeout = Long.valueOf(timeoutValue.toMillis()).intValue();
+        }
+
+        Config config = new Config();
+        //  不能反序列化 阻塞队列中的string元素
+        Codec codec = new JsonJacksonCodec();
+        config.setCodec(codec);
+        config.setEventLoopGroup(new NioEventLoopGroup());
+        if (isLinuxPlatform() && Epoll.isAvailable()) {
+            config.setEventLoopGroup(new EpollEventLoopGroup());
+            config.setTransportMode(TransportMode.EPOLL);
+        }
+
+        if (redisProperties.getSentinel() != null) {
+            String[] nodes = convert(redisProperties.getSentinel().getNodes());
+            config.useSentinelServers()
+                    .setMasterName(redisProperties.getSentinel().getMaster())
+                    .addSentinelAddress(nodes)
+                    .setDatabase(redisProperties.getDatabase())
+                    .setConnectTimeout(timeout)
+                    .setPassword(redisProperties.getPassword())
+                    // 性能配置
+                    .setConnectTimeout(timeout)
+                    .setDnsMonitoringInterval(redisProperties.getRedisson().getDnsMonitoringInterval())
+                    .setIdleConnectionTimeout(redisProperties.getRedisson().getIdleConnectionTimeout())
+                    .setKeepAlive(redisProperties.getRedisson().isKeepAlive())
+                    .setPingConnectionInterval(redisProperties.getRedisson().getPingConnectionInterval())
+                    //.setPingTimeout(redisProperties.getRedisson().getPingTimeout())
+                    .setRetryAttempts(redisProperties.getRedisson().getRetryAttempts())
+                    .setRetryInterval(redisProperties.getRedisson().getRetryInterval())
+                    .setSubscriptionConnectionMinimumIdleSize(redisProperties.getRedisson().getSubscriptionConnectionMinimumIdleSize())
+                    .setSubscriptionConnectionPoolSize(redisProperties.getRedisson().getSubscriptionConnectionPoolSize())
+                    .setSubscriptionsPerConnection(redisProperties.getRedisson().getSubscriptionsPerConnection())
+                    .setTimeout(redisProperties.getRedisson().getResponseTimeout())
+                    .setTcpNoDelay(redisProperties.getRedisson().isTcpNoDelay());
+        } else if (redisProperties.getCluster() != null) {
+
+            List<String> nodesObject = redisProperties.getCluster().getNodes();
+            String[] nodes = convert(nodesObject);
+            config = new Config();
+            config.setCodec(codec);
+            config.useClusterServers()
+                    .addNodeAddress(nodes)
+                    .setConnectTimeout(timeout)
+                    .setPassword(redisProperties.getPassword())
+                    // 性能配置
+                    .setConnectTimeout(timeout)
+                    .setDnsMonitoringInterval(redisProperties.getRedisson().getDnsMonitoringInterval())
+                    .setIdleConnectionTimeout(redisProperties.getRedisson().getIdleConnectionTimeout())
+                    .setKeepAlive(redisProperties.getRedisson().isKeepAlive())
+                    .setPingConnectionInterval(redisProperties.getRedisson().getPingConnectionInterval())
+                    //.setPingTimeout(redisProperties.getRedisson().getPingTimeout())
+                    .setRetryAttempts(redisProperties.getRedisson().getRetryAttempts())
+                    .setRetryInterval(redisProperties.getRedisson().getRetryInterval())
+                    .setSubscriptionConnectionMinimumIdleSize(redisProperties.getRedisson().getSubscriptionConnectionMinimumIdleSize())
+                    .setSubscriptionConnectionPoolSize(redisProperties.getRedisson().getSubscriptionConnectionPoolSize())
+                    .setSubscriptionsPerConnection(redisProperties.getRedisson().getSubscriptionsPerConnection())
+                    .setTimeout(redisProperties.getRedisson().getResponseTimeout())
+                    .setTcpNoDelay(redisProperties.getRedisson().isTcpNoDelay());
+        } else {
+
+            String prefix = REDIS_PROTOCOL_PREFIX;
+            if (redisProperties.isSsl()) {
+                prefix = REDISS_PROTOCOL_PREFIX;
+            }
+
+            config.useSingleServer()
+                    .setAddress(prefix + redisProperties.getHost() + ":" + redisProperties.getPort())
+                    .setDatabase(redisProperties.getDatabase())
+                    .setPassword(redisProperties.getPassword())
+                    //.setClientName(redisProperties.getClientName())
+                    // 性能配置
+                    .setConnectTimeout(timeout)
+                    .setConnectionMinimumIdleSize(redisProperties.getRedisson().getPool().getMinIdle())
+                    .setConnectionPoolSize(redisProperties.getRedisson().getPool().getMaxActive())
+                    .setDnsMonitoringInterval(redisProperties.getRedisson().getDnsMonitoringInterval())
+                    .setIdleConnectionTimeout(redisProperties.getRedisson().getIdleConnectionTimeout())
+                    .setKeepAlive(redisProperties.getRedisson().isKeepAlive())
+                    .setPingConnectionInterval(redisProperties.getRedisson().getPingConnectionInterval())
+                    //.setPingTimeout(redisProperties.getRedisson().getPingTimeout())
+                    .setRetryAttempts(redisProperties.getRedisson().getRetryAttempts())
+                    .setRetryInterval(redisProperties.getRedisson().getRetryInterval())
+                    .setSubscriptionConnectionMinimumIdleSize(redisProperties.getRedisson().getSubscriptionConnectionMinimumIdleSize())
+                    .setSubscriptionConnectionPoolSize(redisProperties.getRedisson().getSubscriptionConnectionPoolSize())
+                    .setSubscriptionsPerConnection(redisProperties.getRedisson().getSubscriptionsPerConnection())
+                    .setTimeout(redisProperties.getRedisson().getResponseTimeout())
+                    .setTcpNoDelay(redisProperties.getRedisson().isTcpNoDelay());
+
+        }
+
+        return config;
     }
 
     private static boolean isLinuxPlatform() {
