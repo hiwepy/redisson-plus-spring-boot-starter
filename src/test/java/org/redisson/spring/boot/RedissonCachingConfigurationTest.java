@@ -10,7 +10,7 @@ import static org.mockito.Mockito.mock;
 /**
  * Tests for {@link RedissonCachingConfiguration}.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 class RedissonCachingConfigurationTest {
 

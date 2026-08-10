@@ -13,7 +13,7 @@ import org.redisson.config.Config;
 /**
  * Tests for {@link RedissonManager}.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 class RedissonManagerTest {
 

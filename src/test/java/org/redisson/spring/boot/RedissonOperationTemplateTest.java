@@ -20,7 +20,7 @@ import org.redisson.api.RScript.ReturnType;
 /**
  * Tests for {@link RedissonOperationTemplate}.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  */
 class RedissonOperationTemplateTest {
 
