@@ -8,6 +8,12 @@ import java.util.List;
 
 @ConfigurationProperties(prefix = "spring.redis")
 @Data
+/**
+ * <p>Configuration properties for MyRedis.</p>
+ *
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class MyRedisProperties {
 
 

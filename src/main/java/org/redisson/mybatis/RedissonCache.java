@@ -20,6 +20,12 @@ import java.util.concurrent.locks.ReadWriteLock;
  * MyBatis cache implementation
  * @author Nikita Koksharov
  */
+/**
+ * <p>RedissonCache implementation.</p>
+ *
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class RedissonCache implements Cache {
 
     private String id;

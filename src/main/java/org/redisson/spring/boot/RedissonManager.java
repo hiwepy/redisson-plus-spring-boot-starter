@@ -14,6 +14,12 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <p>RedissonManager implementation.</p>
+ *
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public final class RedissonManager {
 
     private static final String REDIS_PROTOCOL_PREFIX = "redis://";

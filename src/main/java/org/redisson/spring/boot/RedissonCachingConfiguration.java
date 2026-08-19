@@ -16,6 +16,12 @@ import org.springframework.core.annotation.Order;
 @ConditionalOnClass(Redisson.class)
 @EnableCaching(proxyTargetClass = true)
 @EnableConfigurationProperties(MyRedisProperties.class)
+/**
+ * <p>Configuration class for RedissonCaching.</p>
+ *
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class RedissonCachingConfiguration {
 
 	@Bean(name = {"redisson", "redissonClient"}, destroyMethod = "shutdown")

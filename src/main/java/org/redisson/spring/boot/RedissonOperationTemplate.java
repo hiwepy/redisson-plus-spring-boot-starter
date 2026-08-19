@@ -21,6 +21,12 @@ import java.util.concurrent.TimeUnit;
  * https://blog.csdn.net/qq_24598601/article/details/105876432
  */
 @Slf4j
+/**
+ * <p>RedissonOperationTemplate implementation.</p>
+ *
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
+ * @since 1.0.0
+ */
 public class RedissonOperationTemplate {
 
 	private RedissonClient redissonClient;
