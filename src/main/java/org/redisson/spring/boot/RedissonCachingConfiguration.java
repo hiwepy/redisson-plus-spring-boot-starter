@@ -25,12 +25,22 @@ import org.springframework.core.annotation.Order;
 public class RedissonCachingConfiguration {
 
 	@Bean(name = {"redisson", "redissonClient"}, destroyMethod = "shutdown")
+    /**
+     * <p>Redisson client.</p>
+     * @param redisProperties
+     * @return the redisson client
+     */
 	public RedissonClient redissonClient(MyRedisProperties redisProperties){
 		return RedissonManager.createRedissonClient(redisProperties);
 	}
 
 	@Bean
 	@Order(1)
+    /**
+     * <p>Redisson operation template.</p>
+     * @param redissonClient
+     * @return the redisson operation template
+     */
 	public RedissonOperationTemplate redissonOperationTemplate(RedissonClient redissonClient) {
 		return new RedissonOperationTemplate(redissonClient);
 	}

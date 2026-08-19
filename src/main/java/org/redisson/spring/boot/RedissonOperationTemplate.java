@@ -21,12 +21,6 @@ import java.util.concurrent.TimeUnit;
  * https://blog.csdn.net/qq_24598601/article/details/105876432
  */
 @Slf4j
-/**
- * <p>RedissonOperationTemplate implementation.</p>
- *
- * @author <a href="https://github.com/loong10k">Loong Wan</a>
- * @since 1.0.0
- */
 public class RedissonOperationTemplate {
 
 	private RedissonClient redissonClient;
@@ -37,6 +31,12 @@ public class RedissonOperationTemplate {
 
 	// ===============================RedisScript=================================
 
+    /**
+     * <p>Lua incr.</p>
+     * @param lockKey
+     * @param amount
+     * @return the lua incr
+     */
 	public RAtomicLong luaIncr(String lockKey, long amount) {
 		Assert.hasLength(lockKey, "lockKey must not be empty");
 		RScript script = redissonClient.getScript();
