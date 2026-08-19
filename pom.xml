@@ -56,8 +56,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Third-Party Dependencies -->
+        <commons-io.version>2.22.0</commons-io.version>
         <mybatis.version>3.5.16</mybatis.version>
         <redisson.version>3.38.1</redisson.version>
+        <slf4j.version>2.0.18</slf4j.version>
         <spring-biz.version>3.0.x.20260630-SNAPSHOT</spring-biz.version>
         <!-- Maven Plugin Dependencies -->
         <maven-antrun-plugin.version>3.1.0</maven-antrun-plugin.version>
